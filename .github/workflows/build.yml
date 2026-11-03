@@ -1,17 +1,22 @@
 name: Build PathBot
-
+ 
 on:
   push:
   workflow_dispatch:
-
+ 
 jobs:
   build:
     runs-on: windows-latest
     steps:
       - uses: actions/checkout@v4
       - name: Build the mod
+        id: build
         uses: geode-sdk/build-geode-mod@main
         with:
-          bindings: geode-sdk/bindings
-          bindings-ref: main
-          combine: false
+          sdk: nightly
+ 
+      - name: Upload .geode
+        uses: actions/upload-artifact@v4
+        with:
+          name: PathBot
+          path: ${{ steps.build.outputs.build-output }}
