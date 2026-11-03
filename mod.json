@@ -1,10 +1,10 @@
 {
   "geode": "4.6.0",
-  "gd": { "win": "2.2074", "android": "2.2074", "mac": "2.2074", "ios": "2.2074" },
-  "id": "tuusuario.pathbot",
+  "gd": { "win": "2.2074",
+  "id": "ricardoomarbinay-lab.pathbot",
   "name": "PathBot",
   "version": "v0.1.0",
-  "developer": "tuusuario",
+  "developer": "ricardoomarbinay-lab.pathbot",
   "description": "Busca por si solo el camino para completar el nivel simulando con el motor del juego (sin macros).",
   "settings": {
     "enabled": {
