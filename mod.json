@@ -3,7 +3,7 @@
   "gd": { "win": "2.2081" },
   "id": "ricardoomarbinay-lab.pathbot",
   "name": "PathBot",
-  "version": "v0.1.0",
+  "version": "v0.1.1",
   "developer": "ricardoomarbinay-lab",
   "description": "Busca por si solo el camino para completar el nivel simulando con el motor del juego (sin macros).",
   "settings": {
