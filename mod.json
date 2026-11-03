@@ -1,0 +1,33 @@
+{
+  "geode": "4.6.0",
+  "gd": { "win": "2.2074", "android": "2.2074", "mac": "2.2074", "ios": "2.2074" },
+  "id": "tuusuario.pathbot",
+  "name": "PathBot",
+  "version": "v0.1.0",
+  "developer": "tuusuario",
+  "description": "Busca por si solo el camino para completar el nivel simulando con el motor del juego (sin macros).",
+  "settings": {
+    "enabled": {
+      "type": "bool", "name": "Activar bot", "default": false,
+      "description": "Al entrar a un nivel, busca el camino y lo reproduce."
+    },
+    "beam-width": {
+      "type": "int", "name": "Ancho del haz", "default": 24, "min": 4, "max": 256,
+      "description": "Mas ancho = mas probabilidad de resolver, pero mas lento."
+    },
+    "stride": {
+      "type": "int", "name": "Paso de decision (ticks 240Hz)", "default": 2, "min": 1, "max": 8,
+      "description": "Granularidad de las acciones. 1 = maxima precision, mas lento."
+    },
+    "probe-steps": {
+      "type": "int", "name": "Pasos de sonda", "default": 10, "min": 0, "max": 60,
+      "description": "Mira hacia adelante al podar candidatos. 0 = desactivado."
+    },
+    "max-seconds": {
+      "type": "int", "name": "Tiempo maximo de busqueda (s)", "default": 900, "min": 30, "max": 7200
+    },
+    "slice-ms": {
+      "type": "int", "name": "Ms de calculo por frame", "default": 8, "min": 2, "max": 50
+    }
+  }
+}
