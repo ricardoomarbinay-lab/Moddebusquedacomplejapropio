@@ -56,6 +56,7 @@ class $modify(BotPlayLayer, PlayLayer) {
         CCLabelBMFont* title = nullptr;
         CCLabelBMFont* info = nullptr;
         bool armed = false;
+        bool gaveUp = false;
         bool savedPractice = false;
         int attempt = 0;
     };
@@ -64,6 +65,9 @@ class $modify(BotPlayLayer, PlayLayer) {
         if (!PlayLayer::init(level, useReplay, dontCreateObjects)) return false;
         bot::g = {};
         bot::playback = {};
+        // Armar desde el inicio: no depender de que resetLevel se llame despues de init.
+        m_fields->armed = true;
+        geode::log::info("PathBot: nivel cargado, bot armado");
         return true;
     }
 
@@ -101,6 +105,7 @@ class $modify(BotPlayLayer, PlayLayer) {
         f->solver = std::make_unique<bot::Solver>(this, cfg, 1337u + f->attempt * 7919u, mul);
         bot::g.mode = bot::Mode::Solving;
         buildOverlay();
+        geode::log::info("PathBot: empezando busqueda (intento {})", f->attempt + 1);
     }
 
     void finishSolving() {
@@ -113,6 +118,7 @@ class $modify(BotPlayLayer, PlayLayer) {
 
         if (failed || path.empty()) {
             bot::g.mode = bot::Mode::Idle;
+            m_fields->gaveUp = true;
             Notification::create("PathBot: no se encontro camino (sube el ancho del haz)",
                                  NotificationIcon::Error)->show();
             return;
@@ -144,7 +150,8 @@ class $modify(BotPlayLayer, PlayLayer) {
         auto cfg = bot::Config::load();
         auto f = m_fields.self();
 
-        if (cfg.enabled && f->armed && bot::g.mode == bot::Mode::Idle) {
+        if (cfg.enabled && f->armed && !f->gaveUp && bot::g.mode == bot::Mode::Idle
+            && m_player1 && !m_player1->m_isDead) {
             f->armed = false;
             startSolving();
         }
@@ -164,7 +171,7 @@ class $modify(BotPlayLayer, PlayLayer) {
         if (bot::g.simulating) return;
         bot::g.stepCounter = 0;
         bot::playback.reset();
-        if (bot::g.mode == bot::Mode::Idle && bot::Config::load().enabled)
+        if (bot::g.mode == bot::Mode::Idle && bot::Config::load().enabled && !m_fields->gaveUp)
             m_fields->armed = true;
     }
 
