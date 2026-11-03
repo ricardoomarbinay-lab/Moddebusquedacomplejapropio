@@ -57,6 +57,8 @@ class $modify(BotPlayLayer, PlayLayer) {
         CCLabelBMFont* info = nullptr;
         bool armed = false;
         bool gaveUp = false;
+        CCLabelBMFont* status = nullptr;
+        std::string lastStatus;
         bool savedPractice = false;
         int attempt = 0;
     };
@@ -68,11 +70,6 @@ class $modify(BotPlayLayer, PlayLayer) {
         // Armar desde el inicio: no depender de que resetLevel se llame despues de init.
         m_fields->armed = true;
         geode::log::info("PathBot: nivel cargado, bot armado");
-        // Diagnostico visible: confirma que el mod esta cargado y si el bot esta activo.
-        Notification::create(
-            bot::Config::load().enabled ? "PathBot cargado: bot ACTIVADO"
-                                        : "PathBot cargado: bot DESACTIVADO (actívalo en los ajustes)",
-            NotificationIcon::Info)->show();
         return true;
     }
 
@@ -148,12 +145,33 @@ class $modify(BotPlayLayer, PlayLayer) {
             f->solver->collapses(), el, eta, f->attempt + 1).c_str());
     }
 
+    void refreshStatus(bool enabled) {
+        auto f = m_fields.self();
+        if (!f->status) {
+            auto win = CCDirector::get()->getWinSize();
+            f->status = CCLabelBMFont::create("", "bigFont.fnt");
+            f->status->setScale(0.35f);
+            f->status->setAnchorPoint({0.f, 1.f});
+            f->status->setPosition({6.f, win.height - 6.f});
+            f->status->setZOrder(100000);
+            this->addChild(f->status);
+        }
+        std::string t;
+        if (!enabled) t = "PathBot: DESACTIVADO (actívalo en ajustes)";
+        else if (bot::g.mode == bot::Mode::Solving) t = "PathBot: buscando camino...";
+        else if (bot::g.mode == bot::Mode::Playing) t = "PathBot: reproduciendo";
+        else if (f->gaveUp) t = "PathBot: no encontró camino";
+        else t = "PathBot: ACTIVADO (esperando)";
+        if (t != f->lastStatus) { f->lastStatus = t; f->status->setString(t.c_str()); }
+    }
+
     void update(float dt) {
         // Durante la simulacion el juego avanza con normalidad.
         if (bot::g.simulating) { PlayLayer::update(dt); return; }
 
         auto cfg = bot::Config::load();
         auto f = m_fields.self();
+        refreshStatus(cfg.enabled);
 
         if (cfg.enabled && f->armed && !f->gaveUp && bot::g.mode == bot::Mode::Idle
             && m_player1 && !m_player1->m_isDead) {
