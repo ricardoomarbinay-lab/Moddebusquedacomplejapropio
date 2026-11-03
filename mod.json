@@ -4,7 +4,7 @@
   "id": "ricardoomarbinay-lab.pathbot",
   "name": "PathBot",
   "version": "v0.1.0",
-  "developer": "ricardoomarbinay-lab.pathbot",
+  "developer": "ricardoomarbinay-lab",
   "description": "Busca por si solo el camino para completar el nivel simulando con el motor del juego (sin macros).",
   "settings": {
     "enabled": {
