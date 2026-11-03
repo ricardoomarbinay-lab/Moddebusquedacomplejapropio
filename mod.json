@@ -1,6 +1,6 @@
 {
   "geode": "4.6.0",
-  "gd": { "win": "2.2074",
+  "gd": { "win": "2.2074" },
   "id": "ricardoomarbinay-lab.pathbot",
   "name": "PathBot",
   "version": "v0.1.0",
